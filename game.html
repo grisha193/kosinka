@@ -1,0 +1,1204 @@
+<!-- СТИЛИ -->
+<style>
+  /* Контейнер игры */
+  .solitaire-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0;
+    background: #ffffff;
+    color: #1f2937;
+    border: 1px solid #e5e7eb;
+    border-radius: 1rem;
+    box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+    overflow: hidden;
+    position: relative;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* Заголовок */
+  #signal-widget .game-header {
+    background: linear-gradient(135deg, #2563eb, #4f8dff);
+    color: #ffffff;
+    padding: 1.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #signal-widget .game-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.12) 0%, transparent 70%);
+    animation: signal-rotate 20s linear infinite;
+  }
+
+  @keyframes signal-rotate {
+    from {
+      transform: rotate(0deg);
+    }
+
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  #signal-widget .game-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 0 0.25rem;
+    position: relative;
+    z-index: 1;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  #signal-widget .game-subtitle {
+    font-size: 0.875rem;
+    opacity: 0.9;
+    margin: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Игровое поле */
+  #signal-widget .game-content {
+    padding: 1rem;
+    background: #ffffff;
+    min-height: 520px;
+    position: relative;
+  }
+
+  /* Статистика */
+  #signal-widget .stats-container {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 0.75rem;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    flex-wrap: wrap;
+  }
+
+  #signal-widget .stat-card {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: linear-gradient(135deg, #ffffff, #f8fafc);
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  }
+
+  #signal-widget .stat-label {
+    font-size: 0.75rem;
+    color: #9ca3af;
+    font-weight: 600;
+  }
+
+  #signal-widget .stat-value {
+    font-size: 1rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  #signal-widget .stat-value.moves,
+  #signal-widget .stat-value.timer,
+  #signal-widget .stat-value.target {
+    color: #2563eb;
+  }
+
+  #signal-widget .game-board {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  #signal-widget .top-area {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.75rem;
+    align-items: stretch;
+  }
+
+  #signal-widget .mission-panel,
+  #signal-widget .chain-panel {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    padding: 0.875rem;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+  }
+
+  #signal-widget .mission-title,
+  #signal-widget .chain-title {
+    color: #1f2937;
+    font-size: 0.875rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  #signal-widget .mission-text {
+    color: #4b5563;
+    font-size: 0.875rem;
+    line-height: 1.45;
+  }
+
+  #signal-widget .chain-panel {
+    width: 245px;
+  }
+
+  #signal-widget .chain-row {
+    display: flex;
+    gap: 0.375rem;
+    min-height: 42px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  #signal-widget .chain-token {
+    width: 34px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    color: #2563eb;
+    background: #eef2ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  #signal-widget .chain-token.empty {
+    color: #9ca3af;
+    background: rgba(37, 99, 235, 0.06);
+    border: 1.5px dashed rgba(37, 99, 235, 0.3);
+  }
+
+  /* Карты */
+  #signal-widget .signal-area {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(64px, 1fr));
+    gap: 0.75rem;
+    padding: 1rem;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+  }
+
+  #signal-widget .card {
+    aspect-ratio: 3 / 4;
+    min-height: 92px;
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 0.375rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    position: relative;
+    transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0.5rem;
+    font-weight: 700;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  #signal-widget .card.face-down {
+    background: linear-gradient(135deg, #2563eb, #4f8dff);
+    border: none;
+  }
+
+  #signal-widget .card.face-down::after {
+    content: '';
+    position: absolute;
+    inset: 7px;
+    border: 1.5px solid rgba(255, 255, 255, 0.36);
+    border-radius: 0.25rem;
+  }
+
+  #signal-widget .card.face-down .card-rank,
+  #signal-widget .card.face-down .card-suit,
+  #signal-widget .card.face-down .card-note {
+    opacity: 0;
+  }
+
+  #signal-widget .card.selected {
+    box-shadow: 0 0 0 2px #fbbf24, 0 6px 12px rgba(251, 191, 36, 0.3);
+    transform: translateY(-2px);
+    border-color: #fbbf24;
+  }
+
+  #signal-widget .card.available {
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25), 0 6px 14px rgba(37, 99, 235, 0.16);
+  }
+
+  #signal-widget .card.hint {
+    border-color: #10b981;
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.24), 0 6px 14px rgba(16, 185, 129, 0.16);
+  }
+
+  #signal-widget .card.touched {
+    transform: scale(1.04);
+  }
+
+  #signal-widget .card.invalid {
+    animation: signal-shake 0.28s ease;
+  }
+
+  @keyframes signal-shake {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+
+    30% {
+      transform: translateX(-4px);
+    }
+
+    70% {
+      transform: translateX(4px);
+    }
+  }
+
+  #signal-widget .card-rank {
+    color: #2563eb;
+    font-size: 1.65rem;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  #signal-widget .card-suit {
+    align-self: center;
+    color: #1f2937;
+    font-size: 1.5rem;
+  }
+
+  #signal-widget .card-note {
+    color: #9ca3af;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-align: right;
+  }
+
+  #signal-widget .status-panel {
+    min-height: 46px;
+    padding: 0.75rem 1rem;
+    color: #4b5563;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+  }
+
+  #signal-widget .status-panel.warning {
+    color: #92400e;
+    background: #fffbeb;
+    border-color: #fde68a;
+  }
+
+  #signal-widget .status-panel.success {
+    color: #047857;
+    background: #ecfdf5;
+    border-color: #a7f3d0;
+  }
+
+  /* Кнопки управления */
+  #signal-widget .controls {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+  }
+
+  #signal-widget .btn {
+    padding: 0.625rem 1rem;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  #signal-widget .btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  }
+
+  #signal-widget .btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  #signal-widget .btn-primary,
+  #signal-widget .start-button {
+    background: linear-gradient(135deg, #2563eb, #4f8dff);
+    color: #ffffff;
+    border: none;
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.2);
+  }
+
+  #signal-widget .btn-primary:hover:not(:disabled),
+  #signal-widget .start-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 24px rgba(37, 99, 235, 0.24);
+  }
+
+  #signal-widget .btn-primary:active,
+  #signal-widget .start-button:active {
+    transform: scale(0.98);
+  }
+
+  #signal-widget .btn-secondary {
+    background: #eef2ff;
+    color: #1f2937;
+    border: 1px solid #2563eb;
+  }
+
+  #signal-widget .btn-secondary:hover:not(:disabled) {
+    background: #dbeafe;
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.12);
+  }
+
+  /* Сообщение о победе */
+  #signal-widget .win-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #ffffff;
+    padding: 2rem;
+    border: 1px solid #bfdbfe;
+    border-radius: 1rem;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    z-index: 2000;
+    width: 90%;
+    max-width: 360px;
+  }
+
+  #signal-widget .win-message h2 {
+    font-size: 1.5rem;
+    color: #10b981;
+    margin: 0 0 0.75rem;
+  }
+
+  #signal-widget .win-message p {
+    color: #4b5563;
+    margin: 0 0 1.5rem;
+    font-size: 0.875rem;
+  }
+
+  #signal-widget .win-stats {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  #signal-widget .win-stat-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+  }
+
+  #signal-widget .win-stat-row:last-child {
+    margin-bottom: 0;
+  }
+
+  #signal-widget .win-stat-label {
+    color: #9ca3af;
+  }
+
+  #signal-widget .win-stat-value {
+    color: #1f2937;
+    font-weight: 600;
+  }
+
+  #signal-widget .hidden {
+    display: none !important;
+  }
+
+  /* Стартовый экран */
+  #signal-widget .start-screen {
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.96);
+    z-index: 1500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+
+  #signal-widget .start-content {
+    max-width: 580px;
+    width: 100%;
+    text-align: center;
+  }
+
+  #signal-widget .rules-container {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+  }
+
+  #signal-widget .rules-title {
+    color: #1f2937;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0 0 1.25rem;
+    text-align: center;
+    position: relative;
+  }
+
+  #signal-widget .rules-title::after {
+    content: '';
+    position: absolute;
+    bottom: -0.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 2px;
+    background: linear-gradient(90deg, #2563eb, #4f8dff);
+    border-radius: 999px;
+  }
+
+  #signal-widget .rules-grid {
+    display: grid;
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+    text-align: left;
+  }
+
+  #signal-widget .rule-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+  }
+
+  #signal-widget .rule-icon {
+    width: 1.75rem;
+    color: #2563eb;
+    font-size: 1.1rem;
+    font-weight: 800;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  #signal-widget .rule-text {
+    flex: 1;
+    color: #4b5563;
+    line-height: 1.4;
+    font-size: 0.875rem;
+  }
+
+  #signal-widget .start-button {
+    padding: 0.875rem 2.5rem;
+    font-size: 1rem;
+    border-radius: 0.625rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  @media (max-width: 720px) {
+    #signal-widget .game-content {
+      min-height: 560px;
+    }
+
+    #signal-widget .top-area {
+      grid-template-columns: 1fr;
+    }
+
+    #signal-widget .chain-panel {
+      width: auto;
+    }
+
+    #signal-widget .signal-area {
+      gap: 0.5rem;
+      padding: 0.75rem;
+    }
+
+    #signal-widget .card {
+      min-height: 78px;
+      padding: 0.4rem;
+    }
+
+    #signal-widget .card-rank {
+      font-size: 1.35rem;
+    }
+
+    #signal-widget .card-suit {
+      font-size: 1.2rem;
+    }
+  }
+
+  @media (max-width: 420px) {
+    #signal-widget .game-header {
+      padding: 1.25rem 1rem;
+    }
+
+    #signal-widget .game-content {
+      padding: 0.75rem;
+    }
+
+    #signal-widget .signal-area {
+      grid-template-columns: repeat(4, minmax(50px, 1fr));
+    }
+
+    #signal-widget .card {
+      min-height: 68px;
+    }
+
+    #signal-widget .card-note {
+      display: none;
+    }
+
+    #signal-widget .stats-container {
+      gap: 0.5rem;
+      padding: 0.5rem;
+    }
+
+    #signal-widget .stat-card {
+      padding: 0.45rem 0.55rem;
+    }
+
+    #signal-widget input,
+    #signal-widget select,
+    #signal-widget textarea,
+    #signal-widget button {
+      font-size: 16px !important;
+    }
+  }
+</style>
+
+<!-- HTML КОНТЕЙНЕР -->
+
+<div id="signal-widget" class="solitaire-container" tabindex="-1">
+  <div class="game-header">
+    <h1 class="game-title">Сигнальные башни</h1>
+    <p class="game-subtitle">Карточная головоломка про цепочку маяков</p>
+  </div>
+
+  <div class="game-content">
+    <div class="stats-container">
+      <div class="stat-card">
+        <span class="stat-label">Сумма:</span>
+        <span id="score-count" class="stat-value moves">0</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Цель:</span>
+        <span id="target-count" class="stat-value target">0</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Шаги:</span>
+        <span id="steps-count" class="stat-value timer">0/5</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Скан:</span>
+        <span id="scans-count" class="stat-value target">3</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Время:</span>
+        <span id="timer-count" class="stat-value timer">00:00</span>
+      </div>
+    </div>
+
+    <div class="game-board">
+      <div class="top-area">
+        <div class="mission-panel">
+          <div class="mission-title">Задание</div>
+          <div id="mission-text" class="mission-text">
+            Соберите цепочку из пяти соседних карт так, чтобы их сумма совпала с целью.
+          </div>
+        </div>
+
+        <div class="chain-panel">
+          <div class="chain-title">Цепочка</div>
+          <div id="chain-row" class="chain-row"></div>
+        </div>
+      </div>
+
+      <div id="signal-area" class="signal-area"></div>
+      <div id="status-panel" class="status-panel">
+        Нажмите "Начать игру", чтобы получить карту башен.
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:center;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+<select id="difficulty-select" class="btn btn-secondary">
+<option value="easy">Лёгкий</option>
+<option value="normal" selected>Нормальный</option>
+<option value="hard">Сложный</option>
+</select>
+</div>
+<div class="controls">
+      <button id="new-game-btn" class="btn btn-primary">Новая игра</button>
+      <button id="scan-btn" class="btn btn-secondary">Сканировать</button>
+      <button id="undo-btn" class="btn btn-secondary">Отменить</button>
+      <button id="hint-btn" class="btn btn-secondary">Подсказка</button>
+    </div>
+
+    <div id="win-message" class="win-message hidden">
+      <h2>Победа!</h2>
+      <p>Сигнал прошёл через все башни и точно попал в частоту цели.</p>
+      <div class="win-stats">
+        <div class="win-stat-row">
+          <span class="win-stat-label">Сумма:</span>
+          <span id="win-score" class="win-stat-value">0</span>
+        </div>
+        <div class="win-stat-row">
+          <span class="win-stat-label">Сканирований осталось:</span>
+          <span id="win-scans" class="win-stat-value">0</span>
+        </div>
+        <div class="win-stat-row">
+          <span class="win-stat-label">Лучший результат:</span>
+          <span id="best-score" class="win-stat-value">0</span>
+        </div>
+      </div>
+      <button id="play-again-btn" class="btn btn-primary">Играть снова</button>
+    </div>
+
+    <div id="start-screen" class="start-screen">
+      <div class="start-content">
+        <div class="rules-container">
+          <h3 class="rules-title">Правила игры</h3>
+          <div class="rules-grid">
+            <div class="rule-item">
+              <span class="rule-icon">1</span>
+              <span class="rule-text">Откройте первую карту где угодно, затем выбирайте только соседние по стороне карты.</span>
+            </div>
+            <div class="rule-item">
+              <span class="rule-icon">2</span>
+              <span class="rule-text">В цепочке должно быть ровно пять карт, а их сумма должна равняться цели.</span>
+            </div>
+            <div class="rule-item">
+              <span class="rule-icon">3</span>
+              <span class="rule-text">Сканирование ненадолго показывает все значения, но зарядов всего три.</span>
+            </div>
+            <div class="rule-item">
+              <span class="rule-icon">4</span>
+              <span class="rule-text">Если цепочка ушла не туда, отмените последний ход или начните новую карту.</span>
+            </div>
+          </div>
+        </div>
+
+        <button id="start-game-btn" class="start-button">Начать игру</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- СКРИПТ -->
+<script>
+(() => {
+  // Wait for DOM to be ready before initializing the game
+  function setupGame() {
+    // Function to initialize the game
+    function initializeGame() {
+      // Start the game in an IIFE
+      (function () {
+        // Константы
+        const BOARD_SIZE = 4;
+        const CHAIN_LENGTH = 5;
+        const INITIAL_SCANS = 3;
+        const REVEAL_TIME = 1800;
+        const SUITS = ['signal', 'wave', 'tower', 'spark'];
+        const SUIT_SYMBOLS = {
+          signal: '~',
+          wave: '=',
+          tower: '^',
+          spark: '*'
+        };
+
+        // DOM-элементы
+        const widget = document.getElementById('signal-widget');
+        const signalArea = document.getElementById('signal-area');
+        const chainRow = document.getElementById('chain-row');
+        const scoreCount = document.getElementById('score-count');
+        const targetCount = document.getElementById('target-count');
+        const stepsCount = document.getElementById('steps-count');
+        const scansCount = document.getElementById('scans-count');
+        const missionText = document.getElementById('mission-text');
+        const statusPanel = document.getElementById('status-panel');
+        const newGameBtn = document.getElementById('new-game-btn');
+        const scanBtn = document.getElementById('scan-btn');
+        const undoBtn = document.getElementById('undo-btn');
+        const hintBtn = document.getElementById('hint-btn');
+        const startScreen = document.getElementById('start-screen');
+        const startGameBtn = document.getElementById('start-game-btn');
+        const winMessage = document.getElementById('win-message');
+        const playAgainBtn = document.getElementById('play-again-btn');
+        const winScore = document.getElementById('win-score');
+        const winScans = document.getElementById('win-scans');
+        const timerCount = document.getElementById('timer-count');
+        const bestScoreEl = document.getElementById('best-score');
+        const difficultySelect = document.getElementById('difficulty-select');
+
+        const gameState = {
+          board: [],
+          chain: [],
+          solutionPath: [],
+          target: 0,
+          score: 0,
+          scans: INITIAL_SCANS,
+          started: false,
+          difficulty: 'normal',
+          locked: false,
+          revealTimer: null,
+          timerInterval: null,
+          startTime: 0,
+          hintsUsed: 0
+        };
+
+        class SignalCard {
+          constructor(index, value, suit) {
+            this.index = index;
+            this.value = value;
+            this.suit = suit;
+            this.revealed = false;
+            this.selected = false;
+            this.element = this.createElement();
+          }
+
+          createElement() {
+            const card = document.createElement('button');
+            card.type = 'button';
+            card.className = `card face-down ${this.suit}`;
+            card.dataset.index = this.index;
+            card.setAttribute('aria-label', 'Закрытая сигнальная карта');
+            card.innerHTML = `
+              <span class="card-rank">${this.value}</span>
+              <span class="card-suit">${SUIT_SYMBOLS[this.suit]}</span>
+              <span class="card-note">B${this.index + 1}</span>
+            `;
+            return card;
+          }
+
+          updateElement() {
+            this.element.classList.toggle('face-down', !this.revealed);
+            this.element.classList.toggle('selected', this.selected);
+            this.element.classList.toggle('available', isCardAvailable(this.index));
+            this.element.setAttribute(
+              'aria-label',
+              this.revealed ? `Башня ${this.index + 1}, значение ${this.value}` : 'Закрытая сигнальная карта'
+            );
+          }
+        }
+
+        function initGame() {
+          clearRevealTimer();
+          gameState.board = createBoard();
+          gameState.chain = [];
+          gameState.score = 0;
+          gameState.scans = INITIAL_SCANS;
+          gameState.started = true;
+          gameState.locked = false;
+          gameState.hintsUsed = 0;
+          gameState.startTime = Date.now();
+          if (gameState.timerInterval) clearInterval(gameState.timerInterval);
+          gameState.timerInterval = setInterval(updateStats,1000);
+          winMessage.classList.add('hidden');
+          startScreen.classList.add('hidden');
+          missionText.textContent = `Найдите цепочку из ${CHAIN_LENGTH} соседних башен с суммой ${gameState.target}.`;
+          setStatus('Сначала можно открыть любую карту. После этого двигайтесь только по соседним башням.', 'info');
+          renderBoard();
+          renderChain();
+          updateStats();
+          widget.focus();
+        }
+
+        function createBoard() {
+          const path = createSolutionPath();
+          const values = new Array(BOARD_SIZE * BOARD_SIZE).fill(0);
+          const suits = new Array(BOARD_SIZE * BOARD_SIZE).fill('');
+          let target = 0;
+
+          path.forEach(index => {
+            const value = randomInt(3, 8);
+            values[index] = value;
+            suits[index] = randomSuit();
+            target += value;
+          });
+
+          values.forEach((value, index) => {
+            if (value === 0) {
+              values[index] = randomInt(1, 9);
+              suits[index] = randomSuit();
+            }
+          });
+
+          gameState.solutionPath = path;
+          gameState.target = target;
+
+          return values.map((value, index) => new SignalCard(index, value, suits[index]));
+        }
+
+        function createSolutionPath() {
+          for (let attempt = 0; attempt < 200; attempt++) {
+            const path = [randomInt(0, BOARD_SIZE * BOARD_SIZE - 1)];
+
+            while (path.length < CHAIN_LENGTH) {
+              const last = path[path.length - 1];
+              const options = getNeighbors(last).filter(index => !path.includes(index));
+
+              if (options.length === 0) {
+                break;
+              }
+
+              path.push(options[randomInt(0, options.length - 1)]);
+            }
+
+            if (path.length === CHAIN_LENGTH) {
+              return path;
+            }
+          }
+
+          return [0, 1, 2, 6, 10];
+        }
+
+        function renderBoard() {
+          signalArea.innerHTML = '';
+
+          gameState.board.forEach(card => {
+            card.updateElement();
+            card.element.addEventListener('click', handleCardClick);
+            signalArea.appendChild(card.element);
+          });
+
+          updateAvailability();
+        }
+
+        function renderChain() {
+          chainRow.innerHTML = '';
+
+          for (let i = 0; i < CHAIN_LENGTH; i++) {
+            const token = document.createElement('div');
+            const card = gameState.chain[i];
+            token.className = `chain-token${card ? '' : ' empty'}`;
+            token.textContent = card ? card.value : i + 1;
+            chainRow.appendChild(token);
+          }
+        }
+
+        function handleCardClick(e) {
+          if (!gameState.started || gameState.locked) return;
+
+          const card = findCardByElement(e.currentTarget);
+          if (!card || card.selected) return;
+
+          card.element.classList.add('touched');
+          window.setTimeout(() => card.element.classList.remove('touched'), 160);
+
+          if (!isCardAvailable(card.index)) {
+            markInvalid(card);
+            setStatus('Эта башня не соединена с концом цепочки. Выберите карту рядом с последним ходом.', 'warning');
+            return;
+          }
+
+          addCardToChain(card);
+        }
+
+        function addCardToChain(card) {
+          clearRevealTimer();
+          card.revealed = true;
+          card.selected = true;
+          gameState.chain.push(card);
+          gameState.score += card.value;
+
+          renderChain();
+          updateStats();
+          updateAvailability();
+
+          if (gameState.chain.length === CHAIN_LENGTH) {
+            finishChain();
+            return;
+          }
+
+          const left = CHAIN_LENGTH - gameState.chain.length;
+          setStatus(`Башня ${card.index + 1} дала ${card.value}. Осталось выбрать карт: ${left}.`, 'info');
+        }
+
+        function finishChain() {
+          if (gameState.score === gameState.target) {
+            gameState.locked = true;
+            setStatus('Сигнал собран точно. Башни синхронизированы.', 'success');
+            showWinMessage();
+            return;
+          }
+
+          setStatus(
+            `Цепочка закончена, но сумма ${gameState.score}, а цель ${gameState.target}. Отмените последний ход и перестройте маршрут.`,
+            'warning'
+          );
+        }
+
+        function scanBoard() {
+          if (!gameState.started || gameState.locked || gameState.scans <= 0) return;
+
+          clearRevealTimer();
+          gameState.scans--;
+
+          gameState.board.forEach(card => {
+            if (!card.selected) {
+              card.revealed = true;
+            }
+          });
+
+          updateStats();
+          updateAvailability();
+          setStatus('Сканирование активно. Запомните значения до закрытия карт.', 'info');
+
+          gameState.revealTimer = window.setTimeout(() => {
+            gameState.board.forEach(card => {
+              if (!card.selected) {
+                card.revealed = false;
+              }
+            });
+            updateAvailability();
+            setStatus('Сканирование закончилось. Продолжайте цепочку по памяти.', 'info');
+          }, REVEAL_TIME);
+        }
+
+        function undoMove() {
+          if (!gameState.started || gameState.chain.length === 0 || gameState.locked) return;
+
+          clearRevealTimer();
+          const card = gameState.chain.pop();
+          gameState.score -= card.value;
+          card.selected = false;
+          card.revealed = false;
+
+          renderChain();
+          updateStats();
+          updateAvailability();
+          setStatus('Последний ход отменён. Можно выбрать другую соседнюю башню.', 'info');
+        }
+
+        function showHint() {
+          if (!gameState.started || gameState.locked) return;
+
+          clearHints();
+          gameState.hintsUsed++;
+          const suggested = findHelpfulCard();
+
+          if (!suggested) {
+            setStatus('Подсказка не нашла очевидного хода. Используйте сканирование или отмену.', 'warning');
+            return;
+          }
+
+          suggested.element.classList.add('hint');
+          suggested.revealed = true;
+          suggested.updateElement();
+          setStatus(`Подсказка подсветила башню ${suggested.index + 1}.`, 'info');
+
+          window.setTimeout(() => {
+            suggested.element.classList.remove('hint');
+            if (!suggested.selected) {
+              suggested.revealed = false;
+              suggested.updateElement();
+            }
+          }, REVEAL_TIME);
+        }
+
+        function findHelpfulCard() {
+          const available = gameState.board.filter(card => !card.selected && isCardAvailable(card.index));
+          const remainingSlots = CHAIN_LENGTH - gameState.chain.length;
+
+          if (remainingSlots === 0) return null;
+
+          const solutionCandidate = available.find(card => gameState.solutionPath.includes(card.index));
+          if (solutionCandidate) {
+            return solutionCandidate;
+          }
+
+          const targetLeft = gameState.target - gameState.score;
+          const ideal = Math.max(1, Math.round(targetLeft / remainingSlots));
+          return available
+            .slice()
+            .sort((a, b) => Math.abs(a.value - ideal) - Math.abs(b.value - ideal))[0] || null;
+        }
+
+        function updateAvailability() {
+          gameState.board.forEach(card => card.updateElement());
+          scanBtn.disabled = !gameState.started || gameState.locked || gameState.scans <= 0;
+          undoBtn.disabled = !gameState.started || gameState.locked || gameState.chain.length === 0;
+          hintBtn.disabled = !gameState.started || gameState.locked || gameState.chain.length >= CHAIN_LENGTH;
+        }
+
+        function isCardAvailable(index) {
+          if (!gameState.started) return false;
+          if (gameState.chain.length === 0) return true;
+          if (gameState.chain.length >= CHAIN_LENGTH) return false;
+
+          const lastCard = gameState.chain[gameState.chain.length - 1];
+          return getNeighbors(lastCard.index).includes(index);
+        }
+
+        function getNeighbors(index) {
+          const row = Math.floor(index / BOARD_SIZE);
+          const col = index % BOARD_SIZE;
+          const neighbors = [];
+
+          if (row > 0) neighbors.push(index - BOARD_SIZE);
+          if (row < BOARD_SIZE - 1) neighbors.push(index + BOARD_SIZE);
+          if (col > 0) neighbors.push(index - 1);
+          if (col < BOARD_SIZE - 1) neighbors.push(index + 1);
+
+          return neighbors;
+        }
+
+        function markInvalid(card) {
+          card.element.classList.remove('invalid');
+          void card.element.offsetWidth;
+          card.element.classList.add('invalid');
+        }
+
+        function clearHints() {
+          gameState.board.forEach(card => card.element.classList.remove('hint'));
+        }
+
+        function showWinMessage() {
+          if (gameState.timerInterval) clearInterval(gameState.timerInterval);
+          const elapsed = Math.floor((Date.now()-gameState.startTime)/1000);
+          const finalScore = 1000 + gameState.scans*100 - gameState.hintsUsed*50 - elapsed;
+          const best = Math.max(Number(localStorage.getItem('signal_towers_best')||0), finalScore);
+          localStorage.setItem('signal_towers_best', best);
+          winScore.textContent = `${gameState.score}/${gameState.target}`;
+          winScans.textContent = gameState.scans;
+          bestScoreEl.textContent = best;
+          winMessage.classList.remove('hidden');
+        }
+
+        function updateStats() {
+          scoreCount.textContent = gameState.score;
+          targetCount.textContent = gameState.target;
+          stepsCount.textContent = `${gameState.chain.length}/${CHAIN_LENGTH}`;
+          scansCount.textContent = gameState.scans;
+          const sec = gameState.startTime ? Math.floor((Date.now()-gameState.startTime)/1000) : 0;
+          timerCount.textContent = String(Math.floor(sec/60)).padStart(2,'0') + ':' + String(sec%60).padStart(2,'0');
+        }
+
+        function setStatus(message, type) {
+          statusPanel.textContent = message;
+          statusPanel.classList.remove('warning', 'success');
+
+          if (type === 'warning') {
+            statusPanel.classList.add('warning');
+          }
+
+          if (type === 'success') {
+            statusPanel.classList.add('success');
+          }
+        }
+
+        function findCardByElement(element) {
+          return gameState.board.find(card => card.element === element);
+        }
+
+        function clearRevealTimer() {
+          if (gameState.revealTimer) {
+            window.clearTimeout(gameState.revealTimer);
+            gameState.revealTimer = null;
+          }
+        }
+
+        function randomSuit() {
+          return SUITS[randomInt(0, SUITS.length - 1)];
+        }
+
+        function randomInt(min, max) {
+          return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function addEventListeners() {
+          newGameBtn.addEventListener('click', initGame);
+          startGameBtn.addEventListener('click', initGame);
+          playAgainBtn.addEventListener('click', initGame);
+          scanBtn.addEventListener('click', scanBoard);
+          undoBtn.addEventListener('click', undoMove);
+          hintBtn.addEventListener('click', showHint);
+
+          document.addEventListener('keydown', e => {
+            if (!widget.contains(document.activeElement) && document.activeElement !== document.body) return;
+
+            if (e.key.toLowerCase() === 'r') {
+              initGame();
+            }
+
+            if (e.key.toLowerCase() === 's') {
+              scanBoard();
+            }
+
+            if (e.key.toLowerCase() === 'u' || e.key === 'Backspace') {
+              undoMove();
+            }
+          });
+        }
+
+        function prepareStartScreen() {
+          gameState.started = false;
+          gameState.locked = true;
+          gameState.target = 0;
+          gameState.score = 0;
+          gameState.scans = INITIAL_SCANS;
+          renderChain();
+          updateStats();
+          updateAvailability();
+        }
+
+        addEventListeners();
+        prepareStartScreen();
+      })();
+    }
+
+    initializeGame();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupGame);
+  } else {
+    setupGame();
+  }
+})();
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+ const sel=document.getElementById('difficulty-select');
+ if(sel){
+   sel.addEventListener('change',()=>{
+      localStorage.setItem('signal_difficulty',sel.value);
+   });
+   sel.value=localStorage.getItem('signal_difficulty')||'normal';
+ }
+});
+</script>
